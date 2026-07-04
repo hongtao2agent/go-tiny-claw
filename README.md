@@ -71,7 +71,23 @@ go run cmd/claw/main.go
 
 ## 飞书模式
 
-第 09 讲后，入口支持飞书事件回调模式。大模型仍默认使用 MiniMax Anthropic 兼容接口和 `MiniMax-M3`。
+第 09 讲后，入口支持飞书 HTTP 回调模式和 WebSocket 长连接模式。大模型仍默认使用 MiniMax Anthropic 兼容接口和 `MiniMax-M3`。
+
+推荐服务器部署使用长连接模式，不需要公网 IP 或回调 URL：
+
+```bash
+export TINY_CLAW_MODE=feishu-ws
+export MINIMAX_API_KEY=你的 MiniMax API Key
+
+export FEISHU_APP_ID=cli_xxx
+export FEISHU_APP_SECRET=xxx
+export FEISHU_VERIFY_TOKEN=xxx
+export FEISHU_ENCRYPT_KEY=xxx
+
+go run cmd/claw/main.go
+```
+
+HTTP 回调模式仍然保留：
 
 需要在飞书开放平台创建企业自建应用，启用机器人能力，并配置事件订阅。服务端启动后，把公网可访问的回调地址填到飞书事件订阅中：
 

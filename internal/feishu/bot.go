@@ -10,8 +10,10 @@ import (
 	"time"
 
 	lark "github.com/larksuite/oapi-sdk-go/v3"
+	larkcore "github.com/larksuite/oapi-sdk-go/v3/core"
 	"github.com/larksuite/oapi-sdk-go/v3/event/dispatcher"
 	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
+	larkws "github.com/larksuite/oapi-sdk-go/v3/ws"
 	"github.com/yourname/go-tiny-claw/internal/engine"
 )
 
@@ -63,6 +65,32 @@ func (b *FeishuBot) GetEventDispatcher() *dispatcher.EventDispatcher {
 		OnP2MessageReceiveV1(func(ctx context.Context, event *larkim.P2MessageReceiveV1) error {
 			return b.handleMessageReceive(ctx, event)
 		})
+}
+
+func (b *FeishuBot) RunWebSocket(ctx context.Context) error {
+	wsClient := larkws.NewClient(
+		b.config.AppID,
+		b.config.AppSecret,
+		larkws.WithEventHandler(b.GetEventDispatcher()),
+		larkws.WithLogLevel(larkcore.LogLevelInfo),
+		larkws.WithOnReady(func() {
+			log.Println("[Feishu] 长连接已建立，开始接收事件。")
+		}),
+		larkws.WithOnReconnecting(func() {
+			log.Println("[Feishu] 长连接断开，正在重连...")
+		}),
+		larkws.WithOnReconnected(func() {
+			log.Println("[Feishu] 长连接已重连。")
+		}),
+		larkws.WithOnDisconnected(func() {
+			log.Println("[Feishu] 长连接已断开。")
+		}),
+		larkws.WithOnError(func(err error) {
+			log.Printf("[Feishu] 长连接错误: %v\n", err)
+		}),
+	)
+
+	return wsClient.Start(ctx)
 }
 
 func (b *FeishuBot) handleMessageReceive(ctx context.Context, event *larkim.P2MessageReceiveV1) error {

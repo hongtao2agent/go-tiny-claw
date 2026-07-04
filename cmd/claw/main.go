@@ -24,8 +24,10 @@ func main() {
 		runCLI(eng)
 	case "feishu", "server":
 		runFeishuServer(eng)
+	case "feishu-ws", "feishu_ws", "ws", "websocket":
+		runFeishuWebSocket(eng)
 	default:
-		log.Fatal("TINY_CLAW_MODE 只支持 cli 或 feishu")
+		log.Fatal("TINY_CLAW_MODE 只支持 cli、feishu 或 feishu-ws")
 	}
 }
 
@@ -89,6 +91,18 @@ func runFeishuServer(eng *engine.AgentEngine) {
 	log.Printf("🚀 go-tiny-claw 飞书服务端已启动，正在监听 %s，事件路径 /webhook/event\n", addr)
 	if err := http.ListenAndServe(addr, mux); err != nil {
 		log.Fatalf("服务器启动失败: %v", err)
+	}
+}
+
+func runFeishuWebSocket(eng *engine.AgentEngine) {
+	bot, err := feishu.NewFeishuBotFromEnv(eng)
+	if err != nil {
+		log.Fatalf("初始化飞书 Bot 失败: %v", err)
+	}
+
+	log.Println("🚀 go-tiny-claw 飞书长连接模式已启动，无需公网回调地址。")
+	if err := bot.RunWebSocket(context.Background()); err != nil {
+		log.Fatalf("飞书长连接启动失败: %v", err)
 	}
 }
 

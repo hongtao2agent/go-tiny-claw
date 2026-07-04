@@ -29,13 +29,11 @@ WORKDIR /workspace
 
 COPY --from=builder /out/go-tiny-claw /usr/local/bin/go-tiny-claw
 
-ENV TINY_CLAW_MODE=feishu \
+ENV TINY_CLAW_MODE=feishu-ws \
     TINY_CLAW_PROVIDER=minimax \
     MINIMAX_MODEL=MiniMax-M3 \
     MINIMAX_BASE_URL=https://api.minimaxi.com/anthropic \
     TINY_CLAW_HTTP_ADDR=:48080 \
     TINY_CLAW_ENABLE_THINKING=true
-
-EXPOSE 48080
 
 ENTRYPOINT ["/usr/local/bin/go-tiny-claw"]

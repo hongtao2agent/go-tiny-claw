@@ -12,14 +12,12 @@ services:
       - path: .env
         required: false
     environment:
-      TINY_CLAW_MODE: ${TINY_CLAW_MODE:-feishu}
+      TINY_CLAW_MODE: ${TINY_CLAW_MODE:-feishu-ws}
       TINY_CLAW_PROVIDER: ${TINY_CLAW_PROVIDER:-minimax}
       MINIMAX_MODEL: ${MINIMAX_MODEL:-MiniMax-M3}
       MINIMAX_BASE_URL: ${MINIMAX_BASE_URL:-https://api.minimaxi.com/anthropic}
       TINY_CLAW_HTTP_ADDR: :48080
       TINY_CLAW_ENABLE_THINKING: ${TINY_CLAW_ENABLE_THINKING:-true}
-    ports:
-      - "${TINY_CLAW_PORT:-48080}:48080"
     volumes:
       - ../:/workspace
     working_dir: /workspace
