@@ -1,0 +1,7 @@
+.git
+.DS_Store
+deploy/.env
+tmp
+dist
+bin
+*.log

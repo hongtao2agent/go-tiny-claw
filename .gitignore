@@ -1,0 +1,16 @@
+.DS_Store
+
+# Local env/secrets
+.env
+*.env
+deploy/.env
+
+# Build outputs
+bin/
+dist/
+tmp/
+*.log
+
+# Local course/source notes
+[0-9][0-9]｜*.md
+开篇词｜*.md
